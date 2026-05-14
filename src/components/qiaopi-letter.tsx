@@ -73,6 +73,12 @@ const QiaopiLetter = forwardRef<HTMLDivElement, QiaopiLetterProps>(
           backgroundColor: '#d8bc8a',
           overflow: 'hidden',
           color: '#2b1d12',
+          // 外阴影：柔和投影让信纸浮在背景上；内阴影：四边轻微收边
+          boxShadow: [
+            '0 12px 48px rgba(60, 30, 8, 0.55)',
+            '0 4px 16px rgba(60, 30, 8, 0.38)',
+            'inset 0 0 36px rgba(60, 30, 8, 0.18)',
+          ].join(', '),
         }}
       >
         {/* ── 固定红色行框（永远渲染 FIXED_GRID_COLS 列） ── */}
@@ -86,7 +92,7 @@ const QiaopiLetter = forwardRef<HTMLDivElement, QiaopiLetterProps>(
             height: gridH,
             overflow: 'visible',
             pointerEvents: 'none',
-            filter: 'blur(0.55px)',
+            filter: 'blur(0.35px)',
             mixBlendMode: 'multiply',
           }}
         >
@@ -163,7 +169,7 @@ const QiaopiLetter = forwardRef<HTMLDivElement, QiaopiLetterProps>(
                     color: '#180d06',
                     flexShrink: 0,
                     transform: `rotate(${charRotation(colIndex, charIndex)}deg)`,
-                    filter: 'blur(0.5px)',
+                    filter: 'blur(0.2px)',
                   }}
                 >
                   {char}
