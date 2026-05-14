@@ -6,7 +6,7 @@ import { layoutVerticalLetterText } from '@/lib/qiaopi-letter-layout';
 export const QIAOPI_LETTER_WIDTH_PX = 880;
 export const QIAOPI_LETTER_HEIGHT_PX = 1240;
 
-const BODY_TOP_PX = 120;
+const BODY_TOP_PX = 118;
 const BODY_SIDE_PX = 80;
 const BODY_BOTTOM_RESERVE_PX = 200;
 const BODY_WIDTH_PX = QIAOPI_LETTER_WIDTH_PX - BODY_SIDE_PX * 2;
@@ -35,7 +35,7 @@ const QiaopiLetter = forwardRef<HTMLDivElement, QiaopiLetterProps>(
     const senderLine = senderName.trim()
       ? `${senderName.trim()} 敬上`
       : '敬上';
-    const locationLine = location.trim() ? `于 ${location.trim()}` : '';
+    const locationLine = location.trim() ? `于${location.trim()}` : '';
 
     return (
       <div
@@ -54,7 +54,8 @@ const QiaopiLetter = forwardRef<HTMLDivElement, QiaopiLetterProps>(
           `,
           backgroundSize: '22px 22px, 22px 22px, 100% 100%, 100% 100%',
           boxShadow: 'inset 0 0 120px rgba(120, 78, 38, 0.06)',
-          fontFamily: '"Noto Serif SC", "Songti SC", "SimSun", serif',
+          fontFamily:
+            '"Kaiti SC", "STKaiti", "KaiTi", "Noto Serif SC", "Songti SC", serif',
           overflow: 'hidden',
           color: '#3d2914',
         }}
@@ -124,7 +125,6 @@ const QiaopiLetter = forwardRef<HTMLDivElement, QiaopiLetterProps>(
             right: BODY_SIDE_PX,
             bottom: 52,
             height: 132,
-            borderTop: '1px solid rgba(120, 78, 38, 0.28)',
             display: 'flex',
             flexDirection: 'row-reverse',
             alignItems: 'flex-end',
@@ -133,6 +133,18 @@ const QiaopiLetter = forwardRef<HTMLDivElement, QiaopiLetterProps>(
             paddingTop: 20,
           }}
         >
+          <div
+            aria-hidden
+            style={{
+              position: 'absolute',
+              top: 38,
+              left: 0,
+              right: 176,
+              height: 1,
+              background:
+                'linear-gradient(to right, transparent, rgba(120, 78, 38, 0.3) 10%, rgba(120, 78, 38, 0.28) 86%, transparent)',
+            }}
+          />
           <div
             style={{
               writingMode: 'vertical-rl',
@@ -179,20 +191,6 @@ const QiaopiLetter = forwardRef<HTMLDivElement, QiaopiLetterProps>(
             ) : null}
           </div>
         </div>
-
-        <div
-          aria-hidden
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: '42%',
-            width: '1px',
-            height: '100%',
-            background:
-              'linear-gradient(to bottom, transparent, rgba(120, 78, 38, 0.12) 22%, rgba(120, 78, 38, 0.08) 78%, transparent)',
-            pointerEvents: 'none',
-          }}
-        />
       </div>
     );
   }

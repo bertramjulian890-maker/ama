@@ -9,11 +9,10 @@ import {
   QIAOPI_PRINT_STORAGE_KEY,
   type QiaopiPrintPayload,
 } from '@/lib/qiaopi-print-payload';
-import { ArrowLeft, Download, Loader2, Printer } from 'lucide-react';
+import { MOVIE_CINEMA_BRAND } from '@/lib/qiaopi-ui-constants';
+import { ArrowLeft, Download, Loader2 } from 'lucide-react';
 import './letter-print.css';
 
-const cinemaBrand =
-  process.env.NEXT_PUBLIC_QIAOPI_CINEMA_BRAND ?? '合作影院';
 const movieLine =
   process.env.NEXT_PUBLIC_QIAOPI_MOVIE_LINE ??
   '《给阿嬷的情书》· 影院主题互动呈现';
@@ -99,18 +98,8 @@ export default function QiaopiLetterPage() {
           <Button
             type="button"
             size="sm"
-            className="bg-amber-800 font-serif text-amber-50 hover:bg-amber-900"
-            onClick={() => window.print()}
-          >
-            <Printer className="mr-1 h-4 w-4" />
-            打印
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
             disabled={isPngExporting}
-            className="border-amber-700 font-serif text-amber-900"
+            className="bg-amber-800 font-serif text-amber-50 hover:bg-amber-900"
             onClick={exportPng}
           >
             {isPngExporting ? (
@@ -124,9 +113,6 @@ export default function QiaopiLetterPage() {
       </div>
 
       <div className="qiaopi-letter-stage px-2 pb-3 print:block print:px-0 print:pb-0">
-        <p className="no-print qiaopi-content-width mb-2 shrink-0 text-center text-xs text-amber-800/75">
-          竖屏预览。确认无误后可打印或导出图片。
-        </p>
         <div className="print-letter-wrap">
           <div className="letter-screen-scale">
             <QiaopiLetter
@@ -142,7 +128,7 @@ export default function QiaopiLetterPage() {
 
         <footer className="print-brand-footer qiaopi-content-width mt-3 w-full shrink-0 border-t border-amber-900/25 px-4 pb-4 pt-3 text-center font-serif text-sm text-amber-900/80 print:mt-4 print:pb-0 print:text-xs">
           <div className="font-medium tracking-widest text-amber-900">
-            {cinemaBrand}
+            {MOVIE_CINEMA_BRAND}
           </div>
           <div className="mt-1 text-amber-800/90">{movieLine}</div>
         </footer>

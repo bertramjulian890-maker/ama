@@ -36,15 +36,14 @@ export const TEMPLATE_LIST: TemplateMeta[] = [
 ];
 
 export const LOCATION_OPTIONS = [
-  '新加坡',
-  '槟城',
-  '吉隆坡',
-  '马六甲',
-  '曼谷',
-  '雅加达',
-  '马尼拉',
-  '越南',
+  '万象城',
+  '万象汇',
 ] as const;
+
+export const MOVIE_DEFAULT_SENDER = '木生';
+export const MOVIE_DEFAULT_RECEIVER = '吾妻淑柔';
+export const MOVIE_DEFAULT_LOCATION = LOCATION_OPTIONS[0];
+export const MOVIE_CINEMA_BRAND = '万象影城';
 
 export function getRepublicDate(): {
   year: number;
@@ -52,11 +51,9 @@ export function getRepublicDate(): {
   day: number;
   display: string;
 } {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = now.getMonth() + 1;
-  const day = now.getDate();
-  const republicYear = year - 1911;
+  const republicYear = 48;
+  const month = 8;
+  const day = 15;
 
   const chineseNums = [
     '零', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十',
