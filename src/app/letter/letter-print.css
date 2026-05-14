@@ -1,4 +1,4 @@
-/* 侨批信笺页：竖屏展示与纸张导出 */
+/* 侨批信笺页：竖屏展示 */
 @font-face {
   font-family: 'MasaFont';
   src: url('/fonts/MasaFont-Regular.woff2') format('woff2');
@@ -52,7 +52,6 @@
     min(1, calc(100cqw / 880px), calc(100cqh / 1240px))
   );
 }
-
 @media print {
   .no-print {
     display: none !important;

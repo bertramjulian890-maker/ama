@@ -7,15 +7,21 @@ import {
 import { iterateChatCompletionTextDeltas } from '@/lib/openai-chat-sse';
 import {
   TEMPLATE_PROMPTS,
-  USER_TASK_PREFIX,
   buildMovieStyleReference,
   buildOutputLengthInstruction,
+  buildOutputPunctuationInstruction,
+  buildUserTranscribeTask,
   getMaxInputChars,
 } from '@/lib/qiaopi-transcribe-prompts';
+import {
+  LOCATION_OPTIONS,
+  MOVIE_DEFAULT_LOCATION,
+} from '@/lib/qiaopi-ui-constants';
 
 export async function POST(request: NextRequest) {
   try {
-    const { text, template = 'home' } = await request.json();
+    const { text, template = 'home', location, senderName, receiverTitle } =
+      await request.json();
 
     if (!text || typeof text !== 'string') {
       return NextResponse.json(
@@ -43,15 +49,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const senderLocation =
+      typeof location === 'string' &&
+      (LOCATION_OPTIONS as readonly string[]).includes(location)
+        ? location
+        : MOVIE_DEFAULT_LOCATION;
+
     const systemBase =
       TEMPLATE_PROMPTS[template] || TEMPLATE_PROMPTS['home'];
-    const systemPrompt = `${buildMovieStyleReference()}\n\n${systemBase}\n\n${buildOutputLengthInstruction()}`;
+    const systemPrompt = `${buildMovieStyleReference()}\n\n${systemBase}\n\n${buildOutputLengthInstruction()}\n\n${buildOutputPunctuationInstruction()}`;
 
     const messages = [
       { role: 'system' as const, content: systemPrompt },
       {
         role: 'user' as const,
-        content: `${USER_TASK_PREFIX}${text}`,
+        content: buildUserTranscribeTask(text, senderLocation, {
+          senderName: typeof senderName === 'string' ? senderName : undefined,
+          receiverTitle:
+            typeof receiverTitle === 'string' ? receiverTitle : undefined,
+        }),
       },
     ];
 

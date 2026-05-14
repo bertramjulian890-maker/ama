@@ -1,8 +1,7 @@
 'use client';
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { toPng } from 'html-to-image';
 import QiaopiLetter from '@/components/qiaopi-letter';
 import { Button } from '@/components/ui/button';
 import {
@@ -10,7 +9,7 @@ import {
   type QiaopiPrintPayload,
 } from '@/lib/qiaopi-print-payload';
 import { MOVIE_CINEMA_BRAND } from '@/lib/qiaopi-ui-constants';
-import { ArrowLeft, Download, Loader2 } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import './letter-print.css';
 
 const movieLine =
@@ -29,33 +28,7 @@ function readPayload(): { data: QiaopiPrintPayload | null; error: string | null 
 
 export default function QiaopiLetterPage() {
   const router = useRouter();
-  const letterRef = useRef<HTMLDivElement>(null);
-  // 同步读取 sessionStorage，避免"载入中"→"信笺"的背景闪烁
   const [{ data, error }] = useState<{ data: QiaopiPrintPayload | null; error: string | null }>(readPayload);
-  const [isPngExporting, setIsPngExporting] = useState(false);
-
-  const exportPng = useCallback(async () => {
-    if (!letterRef.current || !data) return;
-    setIsPngExporting(true);
-    try {
-      const dataUrl = await toPng(letterRef.current, {
-        pixelRatio: 2,
-        backgroundColor: '#d8bc8a',
-        cacheBust: true,
-      });
-      const link = document.createElement('a');
-      link.href = dataUrl;
-      link.download = `${data.senderName || '侨批'}-${data.republicYearDisplay}.png`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } catch (e) {
-      console.error(e);
-      alert('导出 PNG 失败，请重试。');
-    } finally {
-      setIsPngExporting(false);
-    }
-  }, [data]);
 
   if (error || !data) {
     return (
@@ -84,20 +57,6 @@ export default function QiaopiLetterPage() {
             <ArrowLeft className="mr-1 h-4 w-4" />
             返回修改
           </Button>
-          <Button
-            type="button"
-            size="sm"
-            disabled={isPngExporting}
-            className="bg-amber-800 font-serif text-amber-50 hover:bg-amber-900"
-            onClick={exportPng}
-          >
-            {isPngExporting ? (
-              <Loader2 className="mr-1 h-4 w-4 animate-spin" />
-            ) : (
-              <Download className="mr-1 h-4 w-4" />
-            )}
-            导出 PNG
-          </Button>
         </div>
       </div>
 
@@ -105,7 +64,6 @@ export default function QiaopiLetterPage() {
         <div className="print-letter-wrap">
           <div className="letter-screen-scale">
             <QiaopiLetter
-              ref={letterRef}
               receiverTitle={data.receiverTitle}
               content={data.content}
               senderName={data.senderName}

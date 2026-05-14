@@ -57,7 +57,13 @@ export default function QiaopiHomePage() {
       const response = await fetch('/api/transcribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: sourceText, template: 'movie' }),
+        body: JSON.stringify({
+          text: sourceText,
+          template: 'movie',
+          location,
+          senderName,
+          receiverTitle,
+        }),
       });
 
       if (!response.ok) {
@@ -108,7 +114,7 @@ export default function QiaopiHomePage() {
     } finally {
       setIsTranscribing(false);
     }
-  }, [letterText]);
+  }, [letterText, location, senderName, receiverTitle]);
 
   const handleSend = useCallback(() => {
     const err = validateSendReady(
