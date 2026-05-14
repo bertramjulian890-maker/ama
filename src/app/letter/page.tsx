@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import html2canvas from 'html2canvas';
+import { toPng } from 'html-to-image';
 import QiaopiLetter from '@/components/qiaopi-letter';
 import { Button } from '@/components/ui/button';
 import {
@@ -38,13 +38,11 @@ export default function QiaopiLetterPage() {
     if (!letterRef.current || !data) return;
     setIsPngExporting(true);
     try {
-      const canvas = await html2canvas(letterRef.current, {
-        scale: 2,
+      const dataUrl = await toPng(letterRef.current, {
+        pixelRatio: 2,
         backgroundColor: '#d8bc8a',
-        useCORS: true,
-        logging: false,
+        cacheBust: true,
       });
-      const dataUrl = canvas.toDataURL('image/png');
       const link = document.createElement('a');
       link.href = dataUrl;
       link.download = `${data.senderName || '侨批'}-${data.republicYearDisplay}.png`;

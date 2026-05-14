@@ -9,7 +9,6 @@ import { Label } from '@/components/ui/label';
 import {
   Sparkles,
   Loader2,
-  FileText,
   Send,
 } from 'lucide-react';
 import {
@@ -152,15 +151,9 @@ export default function QiaopiHomePage() {
     <div className="qiaopi-container min-h-[100dvh] overflow-x-hidden">
       <header className="border-b-2 border-amber-900/20 px-4 py-[clamp(1rem,3dvh,1.75rem)] text-center">
         <div className="qiaopi-content-width">
-          <div className="mb-2 flex items-center justify-center gap-2">
-            <FileText className="h-7 w-7 shrink-0 text-amber-800" />
-            <h1 className="font-serif text-[clamp(1.5rem,5vw,1.875rem)] tracking-wider text-amber-900">
-              侨批情书
-            </h1>
-          </div>
-          <p className="font-serif text-[clamp(0.95rem,2.8vw,1.05rem)] text-amber-800/90">
-            竖屏互动 · 一纸侨情
-          </p>
+          <h1 className="font-serif text-[clamp(1.5rem,5vw,1.875rem)] tracking-wider text-amber-900">
+            侨批情书
+          </h1>
         </div>
       </header>
 
@@ -214,7 +207,7 @@ export default function QiaopiHomePage() {
               <Textarea
                 value={letterText}
                 onChange={(e) => setLetterText(e.target.value)}
-                placeholder="用现代话写下想对亲人说的话……"
+                placeholder="写下你的相思……"
                 className="vintage-input min-h-[200px] resize-none border-0 bg-transparent focus:ring-0 sm:min-h-[240px]"
                 disabled={isTranscribing}
               />
