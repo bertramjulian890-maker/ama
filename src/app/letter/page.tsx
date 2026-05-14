@@ -17,25 +17,22 @@ const movieLine =
   process.env.NEXT_PUBLIC_QIAOPI_MOVIE_LINE ??
   '《给阿嬷的情书》· 影院主题互动呈现';
 
+function readPayload(): { data: QiaopiPrintPayload | null; error: string | null } {
+  try {
+    const raw = sessionStorage.getItem(QIAOPI_PRINT_STORAGE_KEY);
+    if (!raw) return { data: null, error: '未找到信笺数据。请返回首页完成转写后，点击「寄出」生成。' };
+    return { data: JSON.parse(raw) as QiaopiPrintPayload, error: null };
+  } catch {
+    return { data: null, error: '信笺数据无效，请返回首页重试。' };
+  }
+}
+
 export default function QiaopiLetterPage() {
   const router = useRouter();
   const letterRef = useRef<HTMLDivElement>(null);
-  const [data, setData] = useState<QiaopiPrintPayload | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  // 同步读取 sessionStorage，避免"载入中"→"信笺"的背景闪烁
+  const [{ data, error }] = useState<{ data: QiaopiPrintPayload | null; error: string | null }>(readPayload);
   const [isPngExporting, setIsPngExporting] = useState(false);
-
-  useEffect(() => {
-    try {
-      const raw = sessionStorage.getItem(QIAOPI_PRINT_STORAGE_KEY);
-      if (!raw) {
-        setError('未找到信笺数据。请返回首页完成转写后，点击「寄出」生成。');
-        return;
-      }
-      setData(JSON.parse(raw) as QiaopiPrintPayload);
-    } catch {
-      setError('信笺数据无效，请返回首页重试。');
-    }
-  }, []);
 
   const exportPng = useCallback(async () => {
     if (!letterRef.current || !data) return;
@@ -69,14 +66,6 @@ export default function QiaopiLetterPage() {
         <Button className="mt-6" variant="outline" onClick={() => router.push('/')}>
           返回首页
         </Button>
-      </div>
-    );
-  }
-
-  if (!data) {
-    return (
-      <div className="flex min-h-[100dvh] items-center justify-center bg-stone-100 font-serif text-amber-800">
-        载入中…
       </div>
     );
   }

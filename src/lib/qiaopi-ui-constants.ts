@@ -41,7 +41,7 @@ export const LOCATION_OPTIONS = [
 ] as const;
 
 export const MOVIE_DEFAULT_SENDER = '木生';
-export const MOVIE_DEFAULT_RECEIVER = '吾妻淑柔';
+export const MOVIE_DEFAULT_RECEIVER = '淑柔';
 export const MOVIE_DEFAULT_LOCATION = LOCATION_OPTIONS[0];
 export const MOVIE_CINEMA_BRAND = '万象影城';
 

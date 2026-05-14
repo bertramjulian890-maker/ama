@@ -7,5 +7,17 @@ export const metadata: Metadata = {
 };
 
 export default function LetterLayout({ children }: { children: ReactNode }) {
-  return children;
+  return (
+    <>
+      {/* 提前预加载字体，避免字体切换导致的布局跳动 */}
+      <link
+        rel="preload"
+        href="/fonts/MasaFont-Regular.woff2"
+        as="font"
+        type="font/woff2"
+        crossOrigin="anonymous"
+      />
+      {children}
+    </>
+  );
 }
