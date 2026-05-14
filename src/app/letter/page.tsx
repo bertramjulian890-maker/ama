@@ -1,0 +1,152 @@
+'use client';
+
+import { useEffect, useRef, useState, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
+import html2canvas from 'html2canvas';
+import QiaopiLetter from '@/components/qiaopi-letter';
+import { Button } from '@/components/ui/button';
+import {
+  QIAOPI_PRINT_STORAGE_KEY,
+  type QiaopiPrintPayload,
+} from '@/lib/qiaopi-print-payload';
+import { ArrowLeft, Download, Loader2, Printer } from 'lucide-react';
+import './letter-print.css';
+
+const cinemaBrand =
+  process.env.NEXT_PUBLIC_QIAOPI_CINEMA_BRAND ?? '合作影院';
+const movieLine =
+  process.env.NEXT_PUBLIC_QIAOPI_MOVIE_LINE ??
+  '《给阿嬷的情书》· 影院主题互动呈现';
+
+export default function QiaopiLetterPage() {
+  const router = useRouter();
+  const letterRef = useRef<HTMLDivElement>(null);
+  const [data, setData] = useState<QiaopiPrintPayload | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [isPngExporting, setIsPngExporting] = useState(false);
+
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(QIAOPI_PRINT_STORAGE_KEY);
+      if (!raw) {
+        setError('未找到信笺数据。请返回首页完成转写后，点击「寄出」生成。');
+        return;
+      }
+      setData(JSON.parse(raw) as QiaopiPrintPayload);
+    } catch {
+      setError('信笺数据无效，请返回首页重试。');
+    }
+  }, []);
+
+  const exportPng = useCallback(async () => {
+    if (!letterRef.current || !data) return;
+    setIsPngExporting(true);
+    try {
+      const canvas = await html2canvas(letterRef.current, {
+        scale: 2,
+        backgroundColor: '#f5f0e1',
+        useCORS: true,
+        logging: false,
+      });
+      const dataUrl = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.href = dataUrl;
+      link.download = `${data.senderName || '侨批'}-${data.republicYearDisplay}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (e) {
+      console.error(e);
+      alert('导出 PNG 失败，请重试。');
+    } finally {
+      setIsPngExporting(false);
+    }
+  }, [data]);
+
+  if (error) {
+    return (
+      <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-stone-100 px-6 font-serif text-amber-900">
+        <p className="max-w-sm text-center leading-relaxed">{error}</p>
+        <Button className="mt-6" variant="outline" onClick={() => router.push('/')}>
+          返回首页
+        </Button>
+      </div>
+    );
+  }
+
+  if (!data) {
+    return (
+      <div className="flex min-h-[100dvh] items-center justify-center bg-stone-100 font-serif text-amber-800">
+        载入中…
+      </div>
+    );
+  }
+
+  return (
+    <div className="qiaopi-print-page flex h-[100dvh] flex-col overflow-hidden bg-stone-100 print:h-auto print:overflow-visible">
+      <div className="no-print sticky top-0 z-10 shrink-0 border-b border-amber-900/15 bg-amber-50/95 px-3 py-3 backdrop-blur-sm">
+        <div className="qiaopi-content-width flex flex-wrap items-center justify-center gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="border-amber-700 font-serif text-amber-900"
+            onClick={() => router.push('/')}
+          >
+            <ArrowLeft className="mr-1 h-4 w-4" />
+            返回修改
+          </Button>
+          <Button
+            type="button"
+            size="sm"
+            className="bg-amber-800 font-serif text-amber-50 hover:bg-amber-900"
+            onClick={() => window.print()}
+          >
+            <Printer className="mr-1 h-4 w-4" />
+            打印
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={isPngExporting}
+            className="border-amber-700 font-serif text-amber-900"
+            onClick={exportPng}
+          >
+            {isPngExporting ? (
+              <Loader2 className="mr-1 h-4 w-4 animate-spin" />
+            ) : (
+              <Download className="mr-1 h-4 w-4" />
+            )}
+            导出 PNG
+          </Button>
+        </div>
+      </div>
+
+      <div className="qiaopi-letter-stage px-2 pb-3 print:block print:px-0 print:pb-0">
+        <p className="no-print qiaopi-content-width mb-2 shrink-0 text-center text-xs text-amber-800/75">
+          竖屏预览。确认无误后可打印或导出图片。
+        </p>
+        <div className="print-letter-wrap">
+          <div className="letter-screen-scale">
+            <QiaopiLetter
+              ref={letterRef}
+              receiverTitle={data.receiverTitle}
+              content={data.content}
+              senderName={data.senderName}
+              republicYear={data.republicYearDisplay}
+              location={data.location}
+            />
+          </div>
+        </div>
+
+        <footer className="print-brand-footer qiaopi-content-width mt-3 w-full shrink-0 border-t border-amber-900/25 px-4 pb-4 pt-3 text-center font-serif text-sm text-amber-900/80 print:mt-4 print:pb-0 print:text-xs">
+          <div className="font-medium tracking-widest text-amber-900">
+            {cinemaBrand}
+          </div>
+          <div className="mt-1 text-amber-800/90">{movieLine}</div>
+        </footer>
+      </div>
+    </div>
+  );
+}
