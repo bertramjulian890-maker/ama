@@ -92,7 +92,7 @@ const QiaopiLetter = forwardRef<HTMLDivElement, QiaopiLetterProps>(
             height: gridH,
             overflow: 'visible',
             pointerEvents: 'none',
-            filter: 'blur(0.35px)',
+            filter: 'none',
             mixBlendMode: 'multiply',
           }}
         >
@@ -169,7 +169,7 @@ const QiaopiLetter = forwardRef<HTMLDivElement, QiaopiLetterProps>(
                     color: '#180d06',
                     flexShrink: 0,
                     transform: `rotate(${charRotation(colIndex, charIndex)}deg)`,
-                    filter: 'blur(0.2px)',
+                    filter: 'none',
                   }}
                 >
                   {char}
