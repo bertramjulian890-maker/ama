@@ -33,7 +33,7 @@ export interface QiaopiLetterProps {
 }
 
 const QiaopiLetter = forwardRef<HTMLDivElement, QiaopiLetterProps>(
-  ({ content, receiverTitle }, ref) => {
+  ({ content, receiverTitle, senderName }, ref) => {
     const traditionalContent = useMemo(() => toTraditional(content), [content]);
     const salutationColumn = useMemo(() => {
       const name = receiverTitle.trim();
@@ -48,6 +48,7 @@ const QiaopiLetter = forwardRef<HTMLDivElement, QiaopiLetterProps>(
     );
 
     const { fontSize, cellWidth, charsPerColumn, columns: bodyColumns } = layout;
+    const traditionalSender = useMemo(() => toTraditional(senderName.trim() || ''), [senderName]);
     const columns = useMemo(
       () => [salutationColumn, ...bodyColumns],
       [salutationColumn, bodyColumns]
@@ -178,6 +179,28 @@ const QiaopiLetter = forwardRef<HTMLDivElement, QiaopiLetterProps>(
             </div>
           ))}
         </div>
+
+        {/* ── 落款：寄信人姓名 + 謹上，位于左下角，传统侨批格式 ── */}
+        {traditionalSender && (
+          <div
+            lang="zh-Hant"
+            className="qiaopi-letter-text"
+            style={{
+              position: 'absolute',
+              bottom: BODY_BOTTOM_PX + 12,
+              left: BODY_SIDE_PX + cellWidth * 0.18,
+              writingMode: 'vertical-rl',
+              textOrientation: 'upright',
+              fontSize,
+              lineHeight: 1.3,
+              color: '#180d06',
+              mixBlendMode: 'multiply',
+              letterSpacing: '0.06em',
+            }}
+          >
+            {traditionalSender}
+          </div>
+        )}
       </div>
     );
   }
