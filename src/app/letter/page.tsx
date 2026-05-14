@@ -43,7 +43,7 @@ export default function QiaopiLetterPage() {
     try {
       const canvas = await html2canvas(letterRef.current, {
         scale: 2,
-        backgroundColor: '#f5f0e1',
+        backgroundColor: '#d8bc8a',
         useCORS: true,
         logging: false,
       });
@@ -82,8 +82,8 @@ export default function QiaopiLetterPage() {
   }
 
   return (
-    <div className="qiaopi-print-page flex h-[100dvh] flex-col overflow-hidden bg-stone-100 print:h-auto print:overflow-visible">
-      <div className="no-print sticky top-0 z-10 shrink-0 border-b border-amber-900/15 bg-amber-50/95 px-3 py-3 backdrop-blur-sm">
+    <div className="qiaopi-print-page flex h-[100dvh] flex-col overflow-hidden print:h-auto print:overflow-visible">
+      <div className="no-print sticky top-0 z-10 shrink-0 px-3 py-3">
         <div className="qiaopi-content-width flex flex-wrap items-center justify-center gap-2">
           <Button
             type="button"

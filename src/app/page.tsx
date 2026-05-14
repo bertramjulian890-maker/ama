@@ -206,21 +206,10 @@ export default function QiaopiHomePage() {
                   ))}
                 </select>
               </div>
-              <div>
-                <Label className="mb-1 block font-serif text-sm text-amber-800">
-                  民国日期
-                </Label>
-                <div className="rounded border border-amber-300 bg-amber-100 px-3 py-2 font-serif text-sm text-amber-900">
-                  {republicDate.display}
-                </div>
-              </div>
             </div>
           </section>
 
           <section>
-            <h2 className="mb-2 font-serif text-base text-amber-900 sm:text-lg">
-              写下您的心意
-            </h2>
             <div className="letter-paper vintage-border rounded-lg p-4">
               <Textarea
                 value={letterText}

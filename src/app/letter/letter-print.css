@@ -1,4 +1,12 @@
 /* 侨批信笺页：竖屏展示与纸张导出 */
+@font-face {
+  font-family: 'MasaFont';
+  src: url('/fonts/MasaFont-Regular.woff2') format('woff2');
+  font-display: block;
+  font-style: normal;
+  font-weight: 400;
+}
+
 @page {
   size: A5 portrait;
   margin: 8mm;
@@ -7,6 +15,13 @@
 .qiaopi-print-page {
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
+  background:
+    radial-gradient(ellipse at 50% 12%, rgba(248, 232, 194, 0.7), transparent 62%),
+    linear-gradient(135deg, #e8d4a9 0%, #d2b783 100%);
+}
+
+.qiaopi-letter-text {
+  font-family: 'MasaFont', 'Kaiti SC', 'STKaiti', 'KaiTi', serif !important;
 }
 
 .qiaopi-letter-stage {

@@ -17,8 +17,11 @@ export function getMaxInputChars(): number {
   return Number.isFinite(n) && n > 0 ? n : DEFAULT_MAX_INPUT_CHARS;
 }
 
-/** 期望模型输出上限（写入 system，默认 600 字） */
-export const DEFAULT_MAX_OUTPUT_CHARS = 600;
+/**
+ * 期望模型输出上限（写入 system，默认 220 字）。
+ * 信笺纸面约可容纳 150-280 字；超出会被布局压缩至最小字号。
+ */
+export const DEFAULT_MAX_OUTPUT_CHARS = 220;
 
 export function getMaxOutputChars(): number {
   const raw = process.env.QIAOPI_MAX_OUTPUT_CHARS?.trim();
@@ -28,7 +31,7 @@ export function getMaxOutputChars(): number {
 
 export function buildOutputLengthInstruction(): string {
   const max = getMaxOutputChars();
-  return `【篇幅】转写正文请控制在约 ${max} 个汉字以内（含标点可略宽），若原文很长须浓缩为侨批书信体，勿堆砌冗长。`;
+  return `【篇幅】转写正文请控制在约 ${max} 个繁体汉字以内（含标点可略宽），若原文很长须浓缩为侨批书信体，勿堆砌冗长。`;
 }
 
 /**
@@ -65,13 +68,14 @@ export function buildMovieStyleReference(): string {
 
 【特别注意】
 - 转写的不是翻译，是还原民国侨批的古朴与深情
+- 一律使用繁体中文输出，包含标点前后的正文，不要输出简体字
 - 时代感以 1940 年代至 1960 年以前为主，避免出现当代词汇、现代城市生活和互联网表达
 - 信笺页面会另行排版称呼、落款、日期与寄出地；你只输出正文，不要输出称呼、冒号、署名、日期、地点或解释说明
 - 保持原文的核心情感和内容，只是改变表达方式，不要编造新的情节
 - 即使原文很平淡，转写后也要有民国书信的典雅和温度，但不要过度修饰`; }
 
 export const USER_TASK_PREFIX =
-  '请将以下现代文字转写为电影《给阿嬷的情书》气质的侨批正文。只输出正文，不要输出称呼、落款、日期、地点、解释或说明：\n\n';
+  '请将以下现代文字转写为电影《给阿嬷的情书》气质的繁体侨批正文。只输出繁体正文，不要输出称呼、落款、日期、地点、解释或说明：\n\n';
 
 export const TEMPLATE_PROMPTS: Record<string, string> = {
   movie: `你是一位为电影《给阿嬷的情书》影院互动装置书写侨批正文的作者。
@@ -81,7 +85,8 @@ export const TEMPLATE_PROMPTS: Record<string, string> = {
 3. 可自然使用"暹罗"、"南洋"、"纸短情长"、"伏惟珍重"等语汇，但不可堆砌
 4. 保留用户原意，少量补足时代氛围，不凭空新增重大情节
 5. 只写正文段落，不写"吾妻淑柔："、"夫 木生"、日期、地点或任何说明
-6. 避免现代词：手机、微信、航班、高铁、万象城、电影院、互联网等，若用户提到现代事物，应转为朴素的思念和问候`,
+6. 一律使用繁体中文，不要出现简体字
+7. 避免现代词：手机、微信、航班、高铁、万象城、电影院、互联网等，若用户提到现代事物，应转为朴素的思念和问候`,
 
   home: `你是一位精通20世纪初至中期侨批（华侨寄给家乡亲人的信件兼汇款凭证）风格文案的创作者。
 请将用户的现代文字转写为侨批风格的家书，要求：
