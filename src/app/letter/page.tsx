@@ -59,10 +59,12 @@ export default function QiaopiLetterPage() {
     }
   }, [data]);
 
-  if (error) {
+  if (error || !data) {
     return (
       <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-stone-100 px-6 font-serif text-amber-900">
-        <p className="max-w-sm text-center leading-relaxed">{error}</p>
+        <p className="max-w-sm text-center leading-relaxed">
+          {error ?? '未找到信笺数据。请返回首页完成转写后，点击「寄出」生成。'}
+        </p>
         <Button className="mt-6" variant="outline" onClick={() => router.push('/')}>
           返回首页
         </Button>
